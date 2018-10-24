@@ -7,7 +7,8 @@ class ArgumentCommits():
   def __init__(self, urls=[]):
     self.mining_object = RepositoryMining(urls, only_in_main_branch=True, only_modifications_with_file_types=['.java'])
     self.commit_records = defaultdict(list)
-    self.result = ''
+    self.result_for_csv = ''
+    self.result_for_tsv = ''
 
   def fetch_commit_data(self):
     '''
@@ -46,7 +47,8 @@ class ArgumentCommits():
 
       for i in range(0, l - 1):
         if len(value[i + 1]['args']) > len(value[i]['args']) and value[i + 1]["current_signature"] != current_signature and value[i + 1]["hash"] != value[i]["hash"]:
-          self.result += f'{value[i + 1]["hash"]},{file_name},{value[i]["current_signature"]},{value[i + 1]["current_signature"]}\n'
+          self.result_for_csv += f'{value[i + 1]["hash"]},{file_name},{value[i]["current_signature"]},{value[i + 1]["current_signature"]}\n'
+          self.result_for_tsv += f'{value[i + 1]["hash"]}\t{file_name}\t{value[i]["current_signature"]}\t{value[i + 1]["current_signature"]}\n'
           current_signature = value[i + 1]["current_signature"]
         
     print("Finding Commits with Additional Parameters: Done!")
@@ -55,5 +57,11 @@ class ArgumentCommits():
   def write_to_csv(self, filename="default_file_name"):
     with open(f'{filename}.csv', 'w') as file:
       file.write('Commit SHA,Java File,Old function signature,New function signature\n')
-      for line in self.result:
+      for line in self.result_for_csv:
+        file.write(line)
+
+  def write_to_tsv(self, filename="default_file_name"):
+    with open(f'{filename}.tsv', 'w') as file:
+      file.write('Commit SHA\tJava File\tOld function signature\tNew function signature\n')
+      for line in self.result_for_tsv:
         file.write(line)
