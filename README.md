@@ -66,7 +66,7 @@ This represents all the states of a particular function during a particular comm
 
 ## Samples
 
-As a test the script was run on 2 famous repositories:
+As a test, the script was run on 3 famous repositories:
 
 1. RxJava:
     * Total Number of Commits: ~5471
